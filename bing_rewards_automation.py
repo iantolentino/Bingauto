@@ -6,21 +6,25 @@ import pyautogui
 
 # ------------------ Configuration ------------------ #
 topics = [
-    "python tips", "ai hacks", "web build",
-    "data tools", "selenium bot"
+    "app ideas", "data viz", "cloud tools",
+    "linux hacks", "ui design", "backend dev",
+    "dev ops", "tech news", "code tricks",
+    "api guide", "bug fixes", "system build",
+    "html tips", "css hacks", "logic flow"
 ]
+
 
 modifiers = [
-    "free guide", "quick tips", "step guide", "easy way", "fast build", "code help",
-    "full course", "real case", "pro tricks", "top tools", "ai guide", "best use",
-    "zero hero", "job tips", "mini app", "no code", "code walk", "tool list",
-    "from base", "deep look", "full app", "fast path", "2025 trend", "smart way",
-    "code boost", "quick hack", "use case", "how work", "must know", "data set",
-    "code flow", "it guide", "code start", "for dev", "no need", "easy steps",
-    "short list", "real deal", "new tips", "good tricks", "key facts"
+    "free tips", "quick hack", "step walk", "easy path", "fast track", "bug help",
+    "full guide", "real test", "pro guide", "top picks", "ml start", "best ways",
+    "zero start", "hire tips", "mini tool", "low code", "logic show", "gear list",
+    "from zero", "deep dive", "full tool", "fast lane", "2025 picks", "smart plan",
+    "boost mode", "speed hack", "real use", "how done", "must have", "data pack",
+    "logic flow", "tech tips", "start code", "dev side", "no tools", "easy steps",
+    "quick list", "solid pick", "fresh tips", "cool hacks", "core facts"
 ]
 
-max_searches = 50
+max_searches = 35
 
 # ------------------ Globals ------------------ #
 used_queries = set()
