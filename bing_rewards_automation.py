@@ -52,6 +52,7 @@ def start_searching():
     global searching, search_count
     searching = True
     search_count = 0
+    
 
     def run():
         global search_count
