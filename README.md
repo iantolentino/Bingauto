@@ -7,7 +7,7 @@ It’s useful for automating repetitive searches, simulating browsing, or quickl
 - 🎯 **Automated searches** — runs up to 35 searches by default.  
 - 🔀 **Randomized queries** — combines topics with modifiers for variety.  
 - 🌐 **Browser integration** — works with your default browser (tested with Microsoft Edge).  
-- 🖥️ **Simple GUI** — start/stop buttons with real-time status updates.  
+- 🖥️ **Simple GUI** — start/stop buttons with real-time status updates.   
 - ⚡ **Lightweight EXE** — no need to install Python, just run the provided `.exe`.  
 
 ## 📦 Installation
