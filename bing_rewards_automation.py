@@ -2,34 +2,31 @@ import random
 import time
 import threading
 import tkinter as tk
+from tkinter import ttk, messagebox
 import pyautogui
+import winsound  # ✅ for notification sound on Windows
 
 # ------------------ Configuration ------------------ #
 topics = [
-    "app ideas", "data viz", "cloud tools",
-    "linux hacks", "ui design", "backend dev",
-    "dev ops", "tech news", "code tricks",
-    "api guide", "bug fixes", "system build",
-    "html tips", "css hacks", "logic flow"
+    "AI apps", "neural networks", "transformers",
+    "LLMs", "generative AI", "AI startups",
+    "AI ethics", "AI tools", "prompt engineering",
+    "vision AI", "NLP models", "AI in cloud",
+    "AI research", "AI in robotics", "autonomous agents"
 ]
-
 
 modifiers = [
-    "free tips", "quick hack", "step walk", "easy path", "fast track", "bug help",
-    "full guide", "real test", "pro guide", "top picks", "ml start", "best ways",
-    "zero start", "hire tips", "mini tool", "low code", "logic show", "gear list",
-    "from zero", "deep dive", "full tool", "fast lane", "2025 picks", "smart plan",
-    "boost mode", "speed hack", "real use", "how done", "must have", "data pack",
-    "logic flow", "tech tips", "start code", "dev side", "no tools", "easy steps",
-    "quick list", "solid pick", "fresh tips", "cool hacks", "core facts"
+    "quick guide", "step by step", "from scratch", "easy intro", "deep dive",
+    "real world use", "2025 trends", "complete tutorial", "case study", "best practices",
+    "hands-on", "no code tools", "AI hacks", "top frameworks", "comparison",
+    "core concepts", "common mistakes", "tips and tricks", "full workflow", "practical guide"
 ]
-
-max_searches = 35
 
 # ------------------ Globals ------------------ #
 used_queries = set()
 searching = False
 search_count = 0
+max_searches = 20  # default, user can override
 
 # ------------------ Generate Unique Query ------------------ #
 def next_query():
@@ -49,33 +46,40 @@ def type_query_fast(query):
 
 # ------------------ Main Automation ------------------ #
 def start_searching():
-    global searching, search_count
+    global searching, search_count, max_searches
+    try:
+        max_searches = int(search_input.get())
+    except ValueError:
+        messagebox.showerror("Error", "Please enter a valid number of searches.")
+        return
+
+    if max_searches <= 0:
+        messagebox.showerror("Error", "Search count must be greater than 0.")
+        return
+
     searching = True
     search_count = 0
-    
 
     def run():
         global search_count
         try:
-            status_var.set("Click your browser")
+            status_var.set("Click your browser in 3s...")
             time.sleep(3)
 
             while searching and search_count < max_searches:
                 q = next_query()
                 status_var.set(f"Search {search_count+1}/{max_searches}: {q}")
 
-                pyautogui.hotkey('ctrl', 't')
+                pyautogui.hotkey('ctrl', 't')  # new tab
                 time.sleep(1)
-
                 type_query_fast(q)
-
-                time.sleep(2)  # view time
-
+                time.sleep(2)  # stay on page
                 pyautogui.hotkey('ctrl', 'w')  # close tab
 
                 search_count += 1
 
-            status_var.set(f"Done {search_count} searches.")
+            status_var.set(f"Done {search_count} searches ✅")
+            winsound.MessageBeep()  # ✅ play notification sound
         except Exception as e:
             status_var.set(f"Error: {e}")
 
@@ -85,20 +89,44 @@ def start_searching():
 def stop_searching():
     global searching
     searching = False
-    status_var.set("Stopped.")
+    status_var.set("Stopped ❌")
 
 # ------------------ GUI Setup ------------------ #
 app = tk.Tk()
-app.title("Bing Search Automator")
-app.geometry("400x180")
+app.title("AI Search Automator")
+app.geometry("440x240")
 app.resizable(False, False)
 
-status_var = tk.StringVar(value="Ready. Click Start and focus Edge.")
+# Dark theme colors
+app.configure(bg="#0f0f0f")
+style = ttk.Style(app)
+style.theme_use("clam")
 
-tk.Label(app, text="Bing Search Automator", font=("Helvetica", 16)).pack(pady=10)
-tk.Label(app, textvariable=status_var, font=("Arial", 10), wraplength=380).pack(pady=5)
+style.configure("TLabel", background="#0f0f0f", foreground="#ffffff", font=("Inter", 11))
+style.configure("TButton", background="#1a1a1a", foreground="#ffffff", padding=6, font=("Inter", 10))
+style.map("TButton",
+    background=[("active", "#333333")],
+    foreground=[("active", "#ffffff")]
+)
+style.configure("TEntry", fieldbackground="#1a1a1a", foreground="#ffffff")
 
-tk.Button(app, text="Start", command=start_searching, bg="green", fg="white", width=15).pack(pady=5)
-tk.Button(app, text="Stop",  command=stop_searching,  bg="red",   fg="white", width=15).pack(pady=5)
+status_var = tk.StringVar(value="Ready. Enter search count and click Start.")
+
+ttk.Label(app, text="🔍 AI Search Automator", font=("Inter", 16, "bold")).pack(pady=10)
+ttk.Label(app, textvariable=status_var, wraplength=400).pack(pady=5)
+
+frame = ttk.Frame(app)
+frame.pack(pady=10)
+
+ttk.Label(frame, text="Number of searches: ").grid(row=0, column=0, padx=5)
+search_input = ttk.Entry(frame, width=8)
+search_input.grid(row=0, column=1, padx=5)
+search_input.insert(0, str(max_searches))
+
+btn_frame = ttk.Frame(app)
+btn_frame.pack(pady=10)
+
+ttk.Button(btn_frame, text="▶ Start", command=start_searching).grid(row=0, column=0, padx=8)
+ttk.Button(btn_frame, text="⏹ Stop", command=stop_searching).grid(row=0, column=1, padx=8)
 
 app.mainloop()
