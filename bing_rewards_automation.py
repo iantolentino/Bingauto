@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import pyautogui
 import pygame
-from datetime import timedelta
+from datetime import timedelta 
   
 # ------------------ Configuration ------------------ #
 topics = [
@@ -163,6 +163,7 @@ ttk.Button(btn_frame, text="▶ Start", command=start_searching).grid(row=0, col
 ttk.Button(btn_frame, text="⏹ Stop", command=stop_searching).grid(row=0, column=1, padx=8)
 
 app.mainloop()
+
 
 
 
