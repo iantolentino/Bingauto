@@ -4,7 +4,7 @@ import threading
 import tkinter as tk
 from tkinter import ttk, messagebox
 import pyautogui
-import winsound  # ✅ for notification sound on Windows
+import pygame   # ✅ for MP3 notification sound
 
 # ------------------ Configuration ------------------ #
 topics = [
@@ -27,6 +27,15 @@ used_queries = set()
 searching = False
 search_count = 0
 max_searches = 20  # default, user can override
+
+# ------------------ Play Notification ------------------ #
+def play_notification():
+    try:
+        pygame.mixer.init()
+        pygame.mixer.music.load("bingnotif.mp3")  # ✅ make sure file is in same folder
+        pygame.mixer.music.play()
+    except Exception as e:
+        print("Sound error:", e)
 
 # ------------------ Generate Unique Query ------------------ #
 def next_query():
@@ -79,7 +88,7 @@ def start_searching():
                 search_count += 1
 
             status_var.set(f"Done {search_count} searches ✅")
-            winsound.MessageBeep()  # ✅ play notification sound
+            play_notification()  # 🔔 Play custom MP3
         except Exception as e:
             status_var.set(f"Error: {e}")
 
@@ -94,21 +103,30 @@ def stop_searching():
 # ------------------ GUI Setup ------------------ #
 app = tk.Tk()
 app.title("AI Search Automator")
-app.geometry("440x240")
+
+# Light gray background
+app.configure(bg="#f0f0f0")
+
+# Center the window
+window_width = 440
+window_height = 240
+screen_width = app.winfo_screenwidth()
+screen_height = app.winfo_screenheight()
+pos_x = (screen_width // 2) - (window_width // 2)
+pos_y = (screen_height // 2) - (window_height // 2)
+app.geometry(f"{window_width}x{window_height}+{pos_x}+{pos_y}")
 app.resizable(False, False)
 
-# Dark theme colors
-app.configure(bg="#0f0f0f")
+# Style
 style = ttk.Style(app)
 style.theme_use("clam")
-
-style.configure("TLabel", background="#0f0f0f", foreground="#ffffff", font=("Inter", 11))
+style.configure("TLabel", background="#f0f0f0", foreground="#000000", font=("Inter", 11))
 style.configure("TButton", background="#1a1a1a", foreground="#ffffff", padding=6, font=("Inter", 10))
 style.map("TButton",
     background=[("active", "#333333")],
     foreground=[("active", "#ffffff")]
 )
-style.configure("TEntry", fieldbackground="#1a1a1a", foreground="#ffffff")
+style.configure("TEntry", fieldbackground="#ffffff", foreground="#000000")
 
 status_var = tk.StringVar(value="Ready. Enter search count and click Start.")
 
