@@ -4,7 +4,8 @@ import threading
 import tkinter as tk
 from tkinter import ttk, messagebox
 import pyautogui
-import pygame   # ✅ for MP3 notification sound 
+import pygame   # ✅ for MP3 notification sound
+from datetime import timedelta
 
 # ------------------ Configuration ------------------ #
 topics = [
@@ -26,7 +27,7 @@ modifiers = [
 used_queries = set()
 searching = False
 search_count = 0
-max_searches = 20  # default, user can override
+max_searches = 30  # default, user can override
 
 # ------------------ Play Notification ------------------ #
 def play_notification():
@@ -66,14 +67,20 @@ def start_searching():
         messagebox.showerror("Error", "Search count must be greater than 0.")
         return
 
+    # Estimate finish time
+    avg_time_per_search = 5  # seconds (rough estimate)
+    total_time_sec = max_searches * avg_time_per_search
+    eta = str(timedelta(seconds=total_time_sec))
+    status_var.set(f"Estimated time: {eta} ⏳")
+
     searching = True
     search_count = 0
 
     def run():
         global search_count
         try:
-            status_var.set("Click your browser in 3s...")
             time.sleep(3)
+            status_var.set("Started searching...")
 
             while searching and search_count < max_searches:
                 q = next_query()
@@ -87,7 +94,7 @@ def start_searching():
 
                 search_count += 1
 
-            status_var.set(f"Done {search_count} searches ✅")
+            status_var.set(f"✅ Done {search_count} searches (took ~{eta})")
             play_notification()  # 🔔 Play custom MP3
         except Exception as e:
             status_var.set(f"Error: {e}")
@@ -107,9 +114,12 @@ app.title("AI Search Automator")
 # Light gray background
 app.configure(bg="#f0f0f0")
 
+# Keep window floating
+app.wm_attributes("-topmost", 1)
+
 # Center the window
 window_width = 440
-window_height = 240
+window_height = 260
 screen_width = app.winfo_screenwidth()
 screen_height = app.winfo_screenheight()
 pos_x = (screen_width // 2) - (window_width // 2)
@@ -148,4 +158,3 @@ ttk.Button(btn_frame, text="▶ Start", command=start_searching).grid(row=0, col
 ttk.Button(btn_frame, text="⏹ Stop", command=stop_searching).grid(row=0, column=1, padx=8)
 
 app.mainloop()
-
